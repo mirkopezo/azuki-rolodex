@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import "./App.css";
+import CardList from "./components/CardList/CardList";
+import SearchBox from "./components/SearchBox/SearchBox";
 
-function App() {
+const App = () => {
+  const [azukis, setAzukis] = useState([]);
+  const [filteredAzukis, setFilteredAzukis] = useState(azukis);
+  const [searchField, setSearchField] = useState("");
+
+  useEffect(() => {
+    fetch("https://6238fda700ed1dbc5ab97a21.mockapi.io/azukis")
+      .then((response) => response.json())
+      .then((fetchedAzukis) => setAzukis(fetchedAzukis));
+  }, []);
+
+  useEffect(() => {
+    const newFilteredAzukis = azukis.filter((azuki) =>
+      azuki.name.toLowerCase().includes(searchField)
+    );
+    setFilteredAzukis(newFilteredAzukis);
+  }, [searchField, azukis]);
+
+  const handleSearchChange = (event) => {
+    const searchFieldString = event.target.value.toLowerCase();
+    setSearchField(searchFieldString);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1 className="app-title">Azuki Rolodex</h1>
+      <SearchBox
+        className="azukis-search-box"
+        placeholder="search Azukis"
+        onChangeHandler={handleSearchChange}
+      />
+      <CardList azukis={filteredAzukis} />
     </div>
   );
-}
+};
 
 export default App;

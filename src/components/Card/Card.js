@@ -3,7 +3,7 @@ import "./Card.styles.css";
 const Card = ({ azuki }) => {
   const { name, id } = azuki;
   return (
-    <div className="card" key={id}>
+    <div className="card">
       <img
         height="220"
         alt="azuki"
